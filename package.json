@@ -1,0 +1,25 @@
+{
+  "name": "verse-display",
+  "version": "1.0.0",
+  "description": "This web application is for Latvian Prayer Network. It is showing verses for host and guest in OBS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rzaw/verseDisplay.git"
+  },
+  "author": "Matijs Lode",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rzaw/verseDisplay/issues"
+  },
+  "homepage": "https://github.com/Rzaw/verseDisplay#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "nodemon": "^1.19.1"
+  }
+}
