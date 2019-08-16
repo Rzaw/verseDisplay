@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" const="text/html;charset=UTF-8" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <title>Vadības panelis</title>
+  </head>
+
+  <body>
+    <section hidden>
+      <div id="change_username">
+        <input id="username" type="text" />
+        <button id="send_username" type="button">Change username</button>
+      </div>
+    </section>
+
+    <section id="input_zone" hidden>
+      <input id="message" class="vertical-align" type="text" />
+      <button id="send_message" class="vertical-align" type="button">
+        Send
+      </button>
+    </section>
+
+    <div class="container">
+      <header></header>
+      <div class="row mb-5">
+        <div class="col-sm">
+          <h1 class="display-4 float-left">Bībeles panti raidījumam</h1>
+          <button
+            type="button"
+            style="margin-top: 1em;"
+            class="btn btn-danger float-right"
+          >
+            Dzēst visus pantus
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary float-right"
+            data-toggle="modal"
+            data-target="#addVerseModal"
+            style="margin-top: 1em;"
+          >
+            Pievienot pantu
+          </button>
+        </div>
+      </div>
+      <div class="row ">
+        <div class="col-sm"></div>
+      </div>
+      <div class="row">
+        <div class="col-sm" id="host">
+          <h3 class="text-center mb-1">Vadītājam</h3>
+          <% data.host.forEach(function(verses){ %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">
+                <%= verses.scripture %>
+                <button type="button" class="close" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </h5>
+
+              <h6 class="card-subtitle mb-2 text-muted">Vadītājs</h6>
+              <p class="card-text">
+                <%= verses.verse %>
+              </p>
+              <a
+                href="#"
+                onclick="sendToDisplay('<%= verses.scripture %>', '<%= verses.verse %>')"
+                class="card-link"
+                >Rādīt</a
+              >
+            </div>
+          </div>
+          <% })%>
+        </div>
+        <div class="col-sm" id="guest">
+          <h3 class="text-center mb-1">Viesim</h3>
+          <% data.guest.forEach(function(verses){ %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <h5 class="card-title">
+                <%= verses.scripture %>
+                <button type="button" class="close" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </h5>
+
+              <h6 class="card-subtitle mb-2 text-muted">Vadītājs</h6>
+              <p class="card-text">
+                <%= verses.verse %>
+              </p>
+              <a
+                href="#"
+                onclick="sendToDisplay('<%= verses.scripture %>', '<%= verses.verse %>')"
+                class="card-link"
+                >Rādīt</a
+              >
+            </div>
+          </div>
+          <% })%>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="addVerseModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addVerseModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addVerseModalLabel">
+              Pievienot rakstu vietu
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form method="post" action="/sendMessage" id="addVerse">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01"
+                    >Kam?</label
+                  >
+                </div>
+                <select
+                  class="custom-select"
+                  name="inputGroupSelect01"
+                  id="inputGroupSelect01"
+                >
+                  <option selected
+                    >Izvēlēties kam pievienot rakstu vietu</option
+                  >
+                  <option value="host">Vadītājam</option>
+                  <option value="guest">Viesim</option>
+                </select>
+              </div>
+
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon3"
+                    >Rakstu vieta</span
+                  >
+                </div>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="scripture"
+                  id="scripture"
+                  aria-describedby="basic-addon3"
+                />
+              </div>
+
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Pants</span>
+                </div>
+                <textarea
+                  class="form-control"
+                  name="verse"
+                  aria-label="Pants"
+                ></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Aizvērt
+            </button>
+            <input
+              type="submit"
+              form="addVerse"
+              class="btn btn-primary"
+              value="Pievienot sarakstam"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+      integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+      integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+      crossorigin="anonymous"
+    ></script>
+    <script src="display.js"></script>
+  </body>
+</html>

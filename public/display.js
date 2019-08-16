@@ -19,8 +19,13 @@ $(function() {
   socket.on("new_message", data => {
     feedback.html("");
     message.val("");
+    chatroom.html("");
     chatroom.append(
-      "<p class='message'>" + data.username + ": " + data.message + "</p>"
+      "<blockquote class='blockquote text-center'><p class='mb-0' style='font-size: x-large;'>" +
+        data.message +
+        "</p><footer class='blockquote-footer'>" +
+        data.username +
+        "</footer></blockquote>"
     );
   });
 
@@ -30,14 +35,30 @@ $(function() {
   });
 
   //Emit typing
-  message.bind("keypress", () => {
-    socket.emit("typing");
-  });
+  //   message.bind("keypress", () => {
+  //     socket.emit("typing");
+  //   });
 
-  //Listen on typing
-  socket.on("typing", data => {
-    feedback.html(
-      "<p><i>" + data.username + " is typing a message..." + "</i></p>"
-    );
-  });
+  //   //Listen on typing
+  //   socket.on("typing", data => {
+  //     feedback.html(
+  //       "<p><i>" + data.username + " is typing a message..." + "</i></p>"
+  //     );
+  //   });
 });
+
+function sendToDisplay(sc, vr) {
+  var username = $("#username");
+  var message = $("#message");
+  var send_message = $("#send_message");
+  var send_username = $("#send_username");
+  username.val(sc);
+  message.val(vr);
+
+  if (username != null || username != undefined) {
+    send_username.click();
+  }
+  if (message != null || message != undefined) {
+    send_message.click();
+  }
+}

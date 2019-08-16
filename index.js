@@ -1,14 +1,65 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
+const fs = require("fs");
+const bodyParser = require("body-parser");
 const app = express();
 //set the template engine ejs
 app.set("view engine", "ejs");
 //middlewares
 app.use(express.static("public"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 //routes
 app.get("/", (req, res) => {
     res.render("index");
+});
+app.get("/sendMessage", (req, res) => {
+    fs.readFile("./storage/verses.json", "utf8", (err, jsonString) => {
+        if (err) {
+            console.log("Error reading file");
+        }
+        try {
+            var verses = JSON.parse(jsonString);
+            res.render("sendMessage", { data: verses });
+        }
+        catch (error) {
+            res.render("sendMessage", { data: error });
+        }
+    });
+});
+app.post("/sendMessage", (req, res, next) => {
+    var verses;
+    fs.readFile("./storage/verses.json", "utf8", (err, jsonString) => {
+        if (err) {
+            console.log("Error reading file");
+        }
+        try {
+            verses = JSON.parse(jsonString);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    });
+    if (req.body.inputGroupSelect01 === "host") {
+        verses.host[0].push({
+            id: "",
+            scripture: req.body.scripture,
+            verse: req.body.verse
+        });
+    }
+    else if (req.body.inputGroupSelect01 === "guest") {
+        verses.guest[0].push({
+            id: "",
+            scripture: req.body.scripture,
+            verse: req.body.verse
+        });
+    }
+    fs.writeFile("./storage/verses.json", verses, err => {
+        if (err)
+            console.log("Error writing file:", err);
+    });
+    res.redirect("/sendMessage");
 });
 //Listen on port 3000
 var server = app.listen(8080);
@@ -16,7 +67,7 @@ var server = app.listen(8080);
 const io = require("socket.io")(server);
 //listen on every connection
 io.on("connection", (socket) => {
-    console.log("New user connected");
+    // console.log("New user connected");
     //default username
     socket.username = "Anonymous";
     //listen on change_username
