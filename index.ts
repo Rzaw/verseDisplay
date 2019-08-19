@@ -2,6 +2,7 @@ import express = require("express");
 import fs = require("fs");
 import bodyParser = require("body-parser");
 const app = express();
+const jsonLocation: string = "./storage/verses.json";
 
 //set the template engine ejs
 app.set("view engine", "ejs");
@@ -17,7 +18,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/sendMessage", (req, res) => {
-  fs.readFile("./storage/verses.json", "utf8", (err, jsonString) => {
+  fs.readFile(jsonLocation, "utf8", (err, jsonString) => {
     if (err) {
       console.log("Error reading file");
     }
@@ -31,17 +32,7 @@ app.get("/sendMessage", (req, res) => {
 });
 
 app.post("/sendMessage", (req, res, next) => {
-  var verses: any;
-  fs.readFile("./storage/verses.json", "utf8", (err, jsonString) => {
-    if (err) {
-      console.log("Error reading file");
-    }
-    try {
-      verses = JSON.parse(jsonString);
-    } catch (error) {
-      console.log(error);
-    }
-  });
+  var verses: any = FetchJSON(verses);
   if (req.body.inputGroupSelect01 === "host") {
     verses.host[0].push({
       id: "",
@@ -61,6 +52,21 @@ app.post("/sendMessage", (req, res, next) => {
   });
   res.redirect("/sendMessage");
 });
+
+function FetchJSON(verses: any) {
+  fs.readFile("./storage/verses.json", "utf8", async (err, jsonString) => {
+    if (err) {
+      console.log("Error reading file");
+    }
+    try {
+      verses = await JSON.parse(jsonString);
+      return verses;
+    } catch (error) {
+      verses = error;
+      return verses;
+    }
+  });
+}
 
 //Listen on port 3000
 var server = app.listen(8080);
