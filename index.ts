@@ -17,66 +17,43 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.get("/sendMessage", (req, res) => {
-  fs.readFile(jsonLocation, "utf8", (err, jsonString) => {
-    if (err) {
-      console.log("Error reading file");
-    }
-    try {
-      var verses: any = JSON.parse(jsonString);
-      res.render("sendMessage", { data: verses });
-    } catch (error) {
-      res.render("sendMessage", { data: error });
-    }
-  });
+app.get("/sendMessage", (req, res, next) => {
+  try {
+    let jsonString = FetchJSONFile();
+    let verses = JSON.parse(jsonString);
+    res.render("sendMessage", { data: verses });
+  } catch (error) {
+    next(error);
+  }
 });
 
 app.post("/sendMessage", (req, res, next) => {
-  var verses: any = FetchJSON(verses);
-  if (req.body.inputGroupSelect01 === "host") {
-    verses.host[0].push({
-      id: "",
-      scripture: req.body.scripture,
-      verse: req.body.verse
-    });
-  } else if (req.body.inputGroupSelect01 === "guest") {
-    verses.guest[0].push({
-      id: "",
-      scripture: req.body.scripture,
-      verse: req.body.verse
-    });
-  }
+  var jsonString: any = FetchJSONFile();
+  var verses: any = JSON.parse(jsonString);
+  // verses = PushToJSONObject(
+  //   req.body.inputGroupSelect01,
+  //   verses,
+  //   req.body.scripture,
+  //   req.body.verse
+  // );
 
-  fs.writeFile("./storage/verses.json", verses, err => {
-    if (err) console.log("Error writing file:", err);
-  });
+  try {
+    fs.writeFileSync(jsonLocation, JSON.stringify(verses), "utf8");
+  } catch (error) {
+    next(error);
+  }
   res.redirect("/sendMessage");
 });
 
-function FetchJSON(verses: any) {
-  fs.readFile("./storage/verses.json", "utf8", async (err, jsonString) => {
-    if (err) {
-      console.log("Error reading file");
-    }
-    try {
-      verses = await JSON.parse(jsonString);
-      return verses;
-    } catch (error) {
-      verses = error;
-      return verses;
-    }
-  });
-}
-
 //Listen on port 3000
-var server = app.listen(8080);
+var server = app.listen(8080, "0.0.0.0");
 
 //socket.io instantiation
 const io = require("socket.io")(server);
 
 //listen on every connection
 io.on("connection", (socket: any) => {
-  // console.log("New user connected");
+  console.log("New user connected");
 
   //default username
   socket.username = "Anonymous";
@@ -100,3 +77,39 @@ io.on("connection", (socket: any) => {
     socket.broadcast.emit("typing", { username: socket.username });
   });
 });
+
+// Functions
+
+function FetchJSONFile() {
+  const jsonString = fs.readFileSync(jsonLocation, "utf8");
+  return jsonString;
+}
+
+function PushToJSONObject(
+  role: string,
+  jsonFile: any,
+  scripture: string,
+  verse: string
+): void {
+  switch (role) {
+    case "host":
+      jsonFile.host.push({
+        id: "",
+        scripture: scripture,
+        verse: verse
+      });
+      break;
+
+    case "guest":
+      jsonFile.guest.push({
+        id: "",
+        scripture: scripture,
+        verse: verse
+      });
+      break;
+
+    default:
+      break;
+  }
+  return jsonFile;
+}

@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const fs = require("fs");
@@ -23,64 +15,40 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get("/", (req, res) => {
     res.render("index");
 });
-app.get("/sendMessage", (req, res) => {
-    fs.readFile(jsonLocation, "utf8", (err, jsonString) => {
-        if (err) {
-            console.log("Error reading file");
-        }
-        try {
-            var verses = JSON.parse(jsonString);
-            res.render("sendMessage", { data: verses });
-        }
-        catch (error) {
-            res.render("sendMessage", { data: error });
-        }
-    });
+app.get("/sendMessage", (req, res, next) => {
+    try {
+        let jsonString = FetchJSONFile();
+        let verses = JSON.parse(jsonString);
+        res.render("sendMessage", { data: verses });
+    }
+    catch (error) {
+        next(error);
+    }
 });
 app.post("/sendMessage", (req, res, next) => {
-    var verses = FetchJSON(verses);
-    if (req.body.inputGroupSelect01 === "host") {
-        verses.host[0].push({
-            id: "",
-            scripture: req.body.scripture,
-            verse: req.body.verse
-        });
+    var jsonString = FetchJSONFile();
+    var verses = JSON.parse(jsonString);
+    // verses = PushToJSONObject(
+    //   req.body.inputGroupSelect01,
+    //   verses,
+    //   req.body.scripture,
+    //   req.body.verse
+    // );
+    try {
+        fs.writeFileSync(jsonLocation, JSON.stringify(verses), "utf8");
     }
-    else if (req.body.inputGroupSelect01 === "guest") {
-        verses.guest[0].push({
-            id: "",
-            scripture: req.body.scripture,
-            verse: req.body.verse
-        });
+    catch (error) {
+        next(error);
     }
-    fs.writeFile("./storage/verses.json", verses, err => {
-        if (err)
-            console.log("Error writing file:", err);
-    });
     res.redirect("/sendMessage");
 });
-function FetchJSON(verses) {
-    fs.readFile("./storage/verses.json", "utf8", (err, jsonString) => __awaiter(this, void 0, void 0, function* () {
-        if (err) {
-            console.log("Error reading file");
-        }
-        try {
-            verses = yield JSON.parse(jsonString);
-            return verses;
-        }
-        catch (error) {
-            verses = error;
-            return verses;
-        }
-    }));
-}
 //Listen on port 3000
-var server = app.listen(8080);
+var server = app.listen(8080, "0.0.0.0");
 //socket.io instantiation
 const io = require("socket.io")(server);
 //listen on every connection
 io.on("connection", (socket) => {
-    // console.log("New user connected");
+    console.log("New user connected");
     //default username
     socket.username = "Anonymous";
     //listen on change_username
@@ -100,4 +68,30 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("typing", { username: socket.username });
     });
 });
+// Functions
+function FetchJSONFile() {
+    const jsonString = fs.readFileSync(jsonLocation, "utf8");
+    return jsonString;
+}
+function PushToJSONObject(role, jsonFile, scripture, verse) {
+    switch (role) {
+        case "host":
+            jsonFile.host.push({
+                id: "",
+                scripture: scripture,
+                verse: verse
+            });
+            break;
+        case "guest":
+            jsonFile.guest.push({
+                id: "",
+                scripture: scripture,
+                verse: verse
+            });
+            break;
+        default:
+            break;
+    }
+    return jsonFile;
+}
 //# sourceMappingURL=index.js.map
