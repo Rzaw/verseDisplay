@@ -1,6 +1,6 @@
 $(function() {
   //make connection
-  var socket = io.connect("http://localhost:8080");
+  var socket = io.connect(window.location.host);
 
   //buttons and inputs
   var message = $("#message");

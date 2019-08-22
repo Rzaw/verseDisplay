@@ -28,12 +28,7 @@ app.get("/sendMessage", (req, res, next) => {
 app.post("/sendMessage", (req, res, next) => {
     var jsonString = FetchJSONFile();
     var verses = JSON.parse(jsonString);
-    // verses = PushToJSONObject(
-    //   req.body.inputGroupSelect01,
-    //   verses,
-    //   req.body.scripture,
-    //   req.body.verse
-    // );
+    verses = PushToJSONObject(req.body.inputGroupSelect01, verses, req.body.scripture, req.body.verse);
     try {
         fs.writeFileSync(jsonLocation, JSON.stringify(verses), "utf8");
     }
