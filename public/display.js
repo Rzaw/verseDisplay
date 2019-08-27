@@ -20,7 +20,7 @@ $(function() {
     feedback.html("");
     message.val("");
     chatroom.html("");
-    chatroom.append(
+    chatroom.html(
       "<blockquote class='blockquote text-center'><p class='mb-0' style='font-size: x-large;'>" +
         data.message +
         "</p><footer class='blockquote-footer'>" +
@@ -47,13 +47,17 @@ $(function() {
   //   });
 });
 
-function sendToDisplay(sc, vr) {
+function sendToDisplay(uniqueID) {
   var username = $("#username");
   var message = $("#message");
   var send_message = $("#send_message");
   var send_username = $("#send_username");
-  username.val(sc);
-  message.val(vr);
+
+  let scripture = $("#js-"+uniqueID+"-scripture")[0].innerText.trim().substring(0, $("#js-"+uniqueID+"-scripture")[0].innerText.trim().length-2);
+  let verse = $("#js-"+uniqueID+"-verse")[0].innerText.trim();
+
+  username.val(scripture);
+  message.val(verse);
 
   if (username != null || username != undefined) {
     send_username.click();
@@ -61,4 +65,14 @@ function sendToDisplay(sc, vr) {
   if (message != null || message != undefined) {
     send_message.click();
   }
+}
+
+function deleteVerseFromJSON(id, role){
+  $.ajax({
+    url: '/sendMessage/'+role+'/'+id+'',
+    type: 'GET',
+    success: function() {
+      location.reload();
+    }
+});
 }

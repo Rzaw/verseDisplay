@@ -8,20 +8,20 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="socket.io.js"></script>
     <title>Vadības panelis</title>
   </head>
 
   <body>
-    <section>
+    <section >
       <div id="change_username">
         <input id="username" type="text" />
         <button id="send_username" type="button">Change username</button>
       </div>
     </section>
 
-    <section id="input_zone">
-      <input id="message" class="vertical-align" type="text" />
+    <section id="input_zone" >
+      <textarea id="message" class="vertical-align" type="" ></textarea>
       <button id="send_message" class="vertical-align" type="button">
         Send
       </button>
@@ -56,49 +56,44 @@
       <div class="row">
         <div class="col-sm" id="host">
           <h3 class="text-center mb-1">Vadītājam</h3>
-          <% data.host.forEach(function(verses){ %>
+          <% data.host.forEach(function(verses, index){ %>
           <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title">
+              <h5 class="card-title" id="js-<%= verses.id %>-scripture">
                 <%= verses.scripture %>
-                <button type="button" class="close" aria-label="Close">
+                <button type="button" class="close" aria-label="Close" onclick="deleteVerseFromJSON('<%= index %>', 'host')">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </h5>
 
               <h6 class="card-subtitle mb-2 text-muted">Vadītājs</h6>
-              <p class="card-text">
+              <p class="card-text" id="js-<%= verses.id %>-verse">
                 <%= verses.verse %>
               </p>
-              <a
-                href="#"
-                onclick="sendToDisplay('<%= verses.scripture %>', '<%= verses.verse %>')"
-                class="card-link"
-                >Rādīt</a
-              >
+              <a href="#" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
           <% })%>
         </div>
         <div class="col-sm" id="guest">
           <h3 class="text-center mb-1">Viesim</h3>
-          <% data.guest.forEach(function(verses){ %>
+          <% data.guest.forEach(function(verses, index){ %>
           <div class="card mb-3">
             <div class="card-body">
-              <h5 class="card-title">
+              <h5 class="card-title" id="js-<%= verses.id %>-scripture">
                 <%= verses.scripture %>
-                <button type="button" class="close" aria-label="Close">
+                <button type="button" class="close" aria-label="Close" onclick="deleteVerseFromJSON('<%= index %>', 'guest')">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </h5>
 
-              <h6 class="card-subtitle mb-2 text-muted">Vadītājs</h6>
-              <p class="card-text">
+              <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
+              <p class="card-text" id="js-<%= verses.id %>-verse">
                 <%= verses.verse %>
               </p>
               <a
                 href="#"
-                onclick="sendToDisplay('<%= verses.scripture %>', '<%= verses.verse %>')"
+                onclick="sendToDisplay('<%= verses.id %>')"
                 class="card-link"
                 >Rādīt</a
               >
@@ -200,11 +195,8 @@
       </div>
     </div>
 
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"

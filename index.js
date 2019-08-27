@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const fs = require("fs");
 const bodyParser = require("body-parser");
+const idGen = require("uniqid");
 const app = express();
 const jsonLocation = "./storage/verses.json";
 //set the template engine ejs
@@ -30,11 +31,31 @@ app.post("/sendMessage", (req, res, next) => {
     var verses = JSON.parse(jsonString);
     verses = PushToJSONObject(req.body.inputGroupSelect01, verses, req.body.scripture, req.body.verse);
     try {
-        fs.writeFileSync(jsonLocation, JSON.stringify(verses), "utf8");
+        WriteJSONFile(verses);
     }
     catch (error) {
         next(error);
     }
+    res.redirect("/sendMessage");
+});
+app.param(['role', 'id'], function (req, res, next, value) {
+    next();
+});
+app.get("/sendMessage/:role/:id", (req, res, next) => {
+    var jsonString = FetchJSONFile();
+    var verses = JSON.parse(jsonString);
+    var params = req.path.split('/');
+    params = arrayRemove(params, "sendMessage");
+    params = arrayRemove(params, "");
+    switch (params[0]) {
+        case 'host':
+            delete verses.host[params[1]];
+            break;
+        case 'guest':
+            delete verses.guest[params[1]];
+            break;
+    }
+    WriteJSONFile(verses);
     res.redirect("/sendMessage");
 });
 //Listen on port 3000
@@ -57,29 +78,40 @@ io.on("connection", (socket) => {
             message: data.message,
             username: socket.username
         });
+        console.log("Message sent");
     });
     //listen on typing
-    socket.on("typing", (data) => {
-        socket.broadcast.emit("typing", { username: socket.username });
-    });
+    // socket.on("typing", (data: any) => {
+    //   socket.broadcast.emit("typing", { username: socket.username });
+    // });
 });
 // Functions
 function FetchJSONFile() {
     const jsonString = fs.readFileSync(jsonLocation, "utf8");
     return jsonString;
 }
+function WriteJSONFile(obj) {
+    var jsString = JSON.stringify(obj);
+    if (jsString.search("/,null") === -1) {
+        jsString = jsString.replace(",null", "");
+    }
+    if (jsString.search("/[null]") === -1) {
+        jsString = jsString.replace("[null]", "[]");
+    }
+    fs.writeFileSync(jsonLocation, jsString, "utf8");
+}
 function PushToJSONObject(role, jsonFile, scripture, verse) {
     switch (role) {
         case "host":
             jsonFile.host.push({
-                id: "",
+                id: idGen(),
                 scripture: scripture,
                 verse: verse
             });
             break;
         case "guest":
             jsonFile.guest.push({
-                id: "",
+                id: idGen(),
                 scripture: scripture,
                 verse: verse
             });
@@ -88,5 +120,10 @@ function PushToJSONObject(role, jsonFile, scripture, verse) {
             break;
     }
     return jsonFile;
+}
+function arrayRemove(arr, value) {
+    return arr.filter(function (ele) {
+        return ele != value;
+    });
 }
 //# sourceMappingURL=index.js.map

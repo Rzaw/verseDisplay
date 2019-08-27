@@ -1,6 +1,7 @@
 import express = require("express");
 import fs = require("fs");
 import bodyParser = require("body-parser");
+import idGen = require("uniqid");
 const app = express();
 const jsonLocation: string = "./storage/verses.json";
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/sendMessage", (req, res, next) => {
+  
   try {
     let jsonString = FetchJSONFile();
     let verses = JSON.parse(jsonString);
@@ -38,10 +40,38 @@ app.post("/sendMessage", (req, res, next) => {
   );
 
   try {
-    fs.writeFileSync(jsonLocation, JSON.stringify(verses), "utf8");
+    WriteJSONFile(verses);
   } catch (error) {
     next(error);
   }
+  res.redirect("/sendMessage");
+});
+
+app.param(['role', 'id'], function (req, res, next, value) {
+  next()
+
+})
+
+
+app.get("/sendMessage/:role/:id", (req, res, next) => {
+  var jsonString: any = FetchJSONFile();
+  var verses = JSON.parse(jsonString);
+  
+  var params = req.path.split('/');
+  params = arrayRemove(params, "sendMessage")
+  params = arrayRemove(params, "");
+
+  switch (params[0]) {
+    case 'host':
+      delete verses.host[params[1]];
+      break;
+    case 'guest':
+      delete verses.guest[params[1]];
+      break;
+  }
+
+  WriteJSONFile(verses);
+
   res.redirect("/sendMessage");
 });
 
@@ -70,12 +100,13 @@ io.on("connection", (socket: any) => {
       message: data.message,
       username: socket.username
     });
+    console.log("Message sent");
   });
 
   //listen on typing
-  socket.on("typing", (data: any) => {
-    socket.broadcast.emit("typing", { username: socket.username });
-  });
+  // socket.on("typing", (data: any) => {
+  //   socket.broadcast.emit("typing", { username: socket.username });
+  // });
 });
 
 // Functions
@@ -85,16 +116,28 @@ function FetchJSONFile() {
   return jsonString;
 }
 
+function WriteJSONFile(obj:any){
+  var jsString:string = JSON.stringify(obj)
+  if (jsString.search("/,null") === -1) {
+    jsString = jsString.replace(",null", "");
+  }
+  if (jsString.search("/[null]") === -1){
+    jsString = jsString.replace("[null]", "[]");
+  }
+  fs.writeFileSync(jsonLocation, jsString, "utf8");
+}
+
 function PushToJSONObject(
   role: string,
   jsonFile: any,
   scripture: string,
   verse: string
 ): void {
+
   switch (role) {
     case "host":
       jsonFile.host.push({
-        id: "",
+        id: idGen(),
         scripture: scripture,
         verse: verse
       });
@@ -102,7 +145,7 @@ function PushToJSONObject(
 
     case "guest":
       jsonFile.guest.push({
-        id: "",
+        id: idGen(),
         scripture: scripture,
         verse: verse
       });
@@ -112,4 +155,10 @@ function PushToJSONObject(
       break;
   }
   return jsonFile;
+}
+
+function arrayRemove(arr:string[], value:string) {
+  return arr.filter(function(ele){
+      return ele != value;
+  });
 }
