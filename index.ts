@@ -3,7 +3,8 @@ import fs = require("fs");
 import bodyParser = require("body-parser");
 import idGen = require("uniqid");
 const app = express();
-const jsonLocation: string = "./storage/verses.json";
+const verseStorage: string = "./storage/verses.json";
+const currentVerse: string = "./storage/currentVerse.json"
 
 //set the template engine ejs
 app.set("view engine", "ejs");
@@ -15,13 +16,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 //routes
 app.get("/", (req, res) => {
-  res.render("index");
+  var obj = GetCurrentVerse();
+  res.render("index", {obj: obj});
 });
 
 app.get("/sendMessage", (req, res, next) => {
   
   try {
-    let jsonString = FetchJSONFile();
+    let jsonString = FetchJSONFile(true);
     let verses = JSON.parse(jsonString);
     res.render("sendMessage", { data: verses });
   } catch (error) {
@@ -30,7 +32,7 @@ app.get("/sendMessage", (req, res, next) => {
 });
 
 app.post("/sendMessage", (req, res, next) => {
-  var jsonString: any = FetchJSONFile();
+  var jsonString: any = FetchJSONFile(true);
   var verses: any = JSON.parse(jsonString);
   verses = PushToJSONObject(
     req.body.inputGroupSelect01,
@@ -40,7 +42,7 @@ app.post("/sendMessage", (req, res, next) => {
   );
 
   try {
-    WriteJSONFile(verses);
+    WriteJSONFile(verses, true);
   } catch (error) {
     next(error);
   }
@@ -54,7 +56,7 @@ app.param(['role', 'id'], function (req, res, next, value) {
 
 
 app.get("/sendMessage/:role/:id", (req, res, next) => {
-  var jsonString: any = FetchJSONFile();
+  var jsonString: any = FetchJSONFile(true);
   var verses = JSON.parse(jsonString);
   
   var params = req.path.split('/');
@@ -70,7 +72,7 @@ app.get("/sendMessage/:role/:id", (req, res, next) => {
       break;
   }
 
-  WriteJSONFile(verses);
+  WriteJSONFile(verses, true);
 
   res.redirect("/sendMessage");
 });
@@ -100,6 +102,7 @@ io.on("connection", (socket: any) => {
       message: data.message,
       username: socket.username
     });
+    WriteJSONFile({scripture: socket.username, verse: data.message}, false);
     console.log("Message sent");
   });
 
@@ -111,12 +114,24 @@ io.on("connection", (socket: any) => {
 
 // Functions
 
-function FetchJSONFile() {
-  const jsonString = fs.readFileSync(jsonLocation, "utf8");
+function FetchJSONFile(storage: boolean) {
+  var readFrom: string;
+  if (storage){
+    readFrom = verseStorage;
+  } else {
+    readFrom = currentVerse;
+  }
+  const jsonString = fs.readFileSync(readFrom, "utf8");
   return jsonString;
 }
 
-function WriteJSONFile(obj:any){
+function WriteJSONFile(obj:any, storage: boolean){
+  var readFrom: string;
+  if (storage){
+    readFrom = verseStorage;
+  } else {
+    readFrom = currentVerse;
+  }
   var jsString:string = JSON.stringify(obj)
   if (jsString.search("/,null") === -1) {
     jsString = jsString.replace(",null", "");
@@ -124,7 +139,7 @@ function WriteJSONFile(obj:any){
   if (jsString.search("/[null]") === -1){
     jsString = jsString.replace("[null]", "[]");
   }
-  fs.writeFileSync(jsonLocation, jsString, "utf8");
+  fs.writeFileSync(readFrom, jsString, "utf8");
 }
 
 function PushToJSONObject(
@@ -161,4 +176,12 @@ function arrayRemove(arr:string[], value:string) {
   return arr.filter(function(ele){
       return ele != value;
   });
+}
+
+function GetCurrentVerse(){
+  var json = FetchJSONFile(false);
+  return JSON.parse(json);
+}
+
+function WriteToCurrentVerse(){
 }

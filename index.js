@@ -5,7 +5,8 @@ const fs = require("fs");
 const bodyParser = require("body-parser");
 const idGen = require("uniqid");
 const app = express();
-const jsonLocation = "./storage/verses.json";
+const verseStorage = "./storage/verses.json";
+const currentVerse = "./storage/currentVerse.json";
 //set the template engine ejs
 app.set("view engine", "ejs");
 //middlewares
@@ -14,11 +15,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 //routes
 app.get("/", (req, res) => {
-    res.render("index");
+    var obj = GetCurrentVerse();
+    res.render("index", { obj: obj });
 });
 app.get("/sendMessage", (req, res, next) => {
     try {
-        let jsonString = FetchJSONFile();
+        let jsonString = FetchJSONFile(true);
         let verses = JSON.parse(jsonString);
         res.render("sendMessage", { data: verses });
     }
@@ -27,11 +29,11 @@ app.get("/sendMessage", (req, res, next) => {
     }
 });
 app.post("/sendMessage", (req, res, next) => {
-    var jsonString = FetchJSONFile();
+    var jsonString = FetchJSONFile(true);
     var verses = JSON.parse(jsonString);
     verses = PushToJSONObject(req.body.inputGroupSelect01, verses, req.body.scripture, req.body.verse);
     try {
-        WriteJSONFile(verses);
+        WriteJSONFile(verses, true);
     }
     catch (error) {
         next(error);
@@ -42,7 +44,7 @@ app.param(['role', 'id'], function (req, res, next, value) {
     next();
 });
 app.get("/sendMessage/:role/:id", (req, res, next) => {
-    var jsonString = FetchJSONFile();
+    var jsonString = FetchJSONFile(true);
     var verses = JSON.parse(jsonString);
     var params = req.path.split('/');
     params = arrayRemove(params, "sendMessage");
@@ -55,7 +57,7 @@ app.get("/sendMessage/:role/:id", (req, res, next) => {
             delete verses.guest[params[1]];
             break;
     }
-    WriteJSONFile(verses);
+    WriteJSONFile(verses, true);
     res.redirect("/sendMessage");
 });
 //Listen on port 3000
@@ -78,6 +80,7 @@ io.on("connection", (socket) => {
             message: data.message,
             username: socket.username
         });
+        WriteJSONFile({ scripture: socket.username, verse: data.message }, false);
         console.log("Message sent");
     });
     //listen on typing
@@ -86,11 +89,25 @@ io.on("connection", (socket) => {
     // });
 });
 // Functions
-function FetchJSONFile() {
-    const jsonString = fs.readFileSync(jsonLocation, "utf8");
+function FetchJSONFile(storage) {
+    var readFrom;
+    if (storage) {
+        readFrom = verseStorage;
+    }
+    else {
+        readFrom = currentVerse;
+    }
+    const jsonString = fs.readFileSync(readFrom, "utf8");
     return jsonString;
 }
-function WriteJSONFile(obj) {
+function WriteJSONFile(obj, storage) {
+    var readFrom;
+    if (storage) {
+        readFrom = verseStorage;
+    }
+    else {
+        readFrom = currentVerse;
+    }
     var jsString = JSON.stringify(obj);
     if (jsString.search("/,null") === -1) {
         jsString = jsString.replace(",null", "");
@@ -98,7 +115,7 @@ function WriteJSONFile(obj) {
     if (jsString.search("/[null]") === -1) {
         jsString = jsString.replace("[null]", "[]");
     }
-    fs.writeFileSync(jsonLocation, jsString, "utf8");
+    fs.writeFileSync(readFrom, jsString, "utf8");
 }
 function PushToJSONObject(role, jsonFile, scripture, verse) {
     switch (role) {
@@ -125,5 +142,11 @@ function arrayRemove(arr, value) {
     return arr.filter(function (ele) {
         return ele != value;
     });
+}
+function GetCurrentVerse() {
+    var json = FetchJSONFile(false);
+    return JSON.parse(json);
+}
+function WriteToCurrentVerse() {
 }
 //# sourceMappingURL=index.js.map

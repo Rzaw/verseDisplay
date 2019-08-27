@@ -14,12 +14,18 @@
 
   <body
     style="height: 100vh;
-  margin: 0;
+  margin: 1em;
   display: grid;
   justify-items: center;
   align-items: center;"
   >
-    <section id="chatroom">
+    <section id="chatroom"> 
+      <% if (obj !== null) {%>
+        <blockquote class='blockquote text-center'>
+          <p class='mb-0' style='font-size: x-large;'> <%= obj.verse %></p>
+          <footer class='blockquote-footer'><%= obj.scripture %></footer>
+        </blockquote>
+      <% } %>
       <section id="feedback"></section>
     </section>
 
