@@ -1,23 +1,10 @@
 # verseDisplay
 
-This is web based application that will display selected verses.
+This is web based application that will display selected verses in OBS.
+It uses Socket.io to display dynamicly verses on page. For storing those verses, we are using json files. No intentions to move to the database.
 
-## Kas man ir vajadzīgs lai uztaisīt šo brīnumu?
+## How to use it?
 
--- Man ir vajadzīgs lai šī lapa strādā kā displejs, ko es daru telefonā/datorā/planšetē tas tiek attēlots uz ekrāna.
--- Ļoti labs piemērs ir chat applikācijas.
-
--- Websockets
-
-## Ko es vēlos redzēt?
-
--- Liels logs priekš OBS
--- Divas sadaļas - Viens priekš host un otrs priekš guest
--- Formu:
----- Rakstu viena no kurienes nāk
----- Rakstu vieta
----- Kuram parādīs
-
-# Kā vajadzētu tam strādāt?
-
-Ir datubāze vai lokālā atmiņa (drošvien xml vai json) kur stāvēs panti.
+Well, fire up that webserver and let's continiue.
+http://webserver:8080 - this page is for displaying versers.
+http://webserver:8080/sendMessage - this is where you operate. Here you can add/remove Bible verses and most importantly, display them.

@@ -21,35 +21,31 @@
     </section>
 
     <section id="input_zone" hidden>
-      <textarea id="message" class="vertical-align" type="" ></textarea>
+      <textarea id="message" class="vertical-align"></textarea>
       <button id="send_message" class="vertical-align" type="button">
         Send
       </button>
     </section>
 
     <div class="container">
-      <header></header>
+      <header>
       <div class="row mb-5">
         <div class="col-sm">
           <h1 class="display-4 float-left">Bībeles panti raidījumam</h1>
-          <button
-            type="button"
-            style="margin-top: 1em;"
-            class="btn btn-danger float-right"
-          >
-            Dzēst visus pantus
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary float-right"
-            data-toggle="modal"
-            data-target="#addVerseModal"
-            style="margin-top: 1em;"
-          >
-            Pievienot pantu
-          </button>
+          <div class="btn-group float-right" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addVerseModal" style="margin-top: 1em;">
+                Pievienot pantu
+              </button>
+              <button type="button" class="btn btn-danger" style="margin-top: 1em;">
+                Dzēst visus pantus
+              </button>
+              <button type="button" class="btn btn-dark" style="margin-top: 1em;">Tīrīt displeju</button>
+            </div>
+
+          
         </div>
       </div>
+      </header>
       <div class="row ">
         <div class="col-sm"></div>
       </div>
@@ -70,7 +66,7 @@
               <p class="card-text" id="js-<%= verses.id %>-verse">
                 <%= verses.verse %>
               </p>
-              <a href="#" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
+              <a href="" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
           <% })%>
@@ -92,7 +88,7 @@
                 <%= verses.verse %>
               </p>
               <a
-                href="#"
+                href=""
                 onclick="sendToDisplay('<%= verses.id %>')"
                 class="card-link"
                 >Rādīt</a
@@ -100,6 +96,41 @@
             </div>
           </div>
           <% })%>
+          <div class="card mb-3">
+              <div class="card-body">
+                <h5 class="card-title" id="js-scripture">
+                  2.Korintiešiem 1:1-5
+                  <button type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
+                <p class="card-text" id="js-verse">
+                    <div class="list-group">
+                        <button type="button" class="list-group-item list-group-item-action">
+                            1 Pāvils, pēc Dieva prāta Kristus Jēzus apustulis, un brālis Timotejs Dieva draudzei, kas ir Korintā, un visiem svētajiem pa visu Ahaju:
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action">
+                            2 žēlastība jums un miers no Dieva, mūsu Tēva, un no Kunga Jēzus Kristus. 
+                          </button>
+                        <button type="button" class="list-group-item list-group-item-action">
+                            3 Slavēts lai ir mūsu Kunga Jēzus Kristus Dievs un Tēvs, žēlastības Tēvs un iepriecināšanas Dievs, kas mūs iepriecina visās mūsu bēdās, 
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action">
+                            4 ka mēs tos, kam ir kādas bēdas, varam iepriecināt ar to iepriecu, ko paši no Dieva esam saņēmuši. 
+                        </button>
+                        <button type="button" class="list-group-item list-group-item-action" disabled>
+                          5 Jo, kā Kristus ciešanas spēcīgi nāk pār mums, tāpat spēcīgi darbojas mūsu ieprieca caur Kristu. 
+                        </button>
+                      </div>
+                </p>
+                <a
+                  href="#"
+                  class="card-link"
+                  >Rādīt visu</a
+                >
+              </div>
+            </div>
         </div>
       </div>
     </div>
@@ -119,12 +150,7 @@
             <h5 class="modal-title" id="addVerseModalLabel">
               Pievienot rakstu vietu
             </h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
@@ -137,15 +163,15 @@
                   >
                 </div>
                 <select
+                required
                   class="custom-select"
                   name="inputGroupSelect01"
                   id="inputGroupSelect01"
                 >
-                  <option selected
-                    >Izvēlēties kam pievienot rakstu vietu</option
-                  >
+                <optgroup label="Izvēlēties kam pievienot rakstu vietu">
                   <option value="host">Vadītājam</option>
                   <option value="guest">Viesim</option>
+                </optgroup>
                 </select>
               </div>
 

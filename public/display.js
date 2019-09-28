@@ -33,18 +33,6 @@ $(function() {
   send_username.click(function() {
     socket.emit("change_username", { username: username.val() });
   });
-
-  //Emit typing
-  //   message.bind("keypress", () => {
-  //     socket.emit("typing");
-  //   });
-
-  //   //Listen on typing
-  //   socket.on("typing", data => {
-  //     feedback.html(
-  //       "<p><i>" + data.username + " is typing a message..." + "</i></p>"
-  //     );
-  //   });
 });
 
 function sendToDisplay(uniqueID) {
@@ -53,8 +41,13 @@ function sendToDisplay(uniqueID) {
   var send_message = $("#send_message");
   var send_username = $("#send_username");
 
-  let scripture = $("#js-"+uniqueID+"-scripture")[0].innerText.trim().substring(0, $("#js-"+uniqueID+"-scripture")[0].innerText.trim().length-2);
-  let verse = $("#js-"+uniqueID+"-verse")[0].innerText.trim();
+  let scripture = $("#js-" + uniqueID + "-scripture")[0]
+    .innerText.trim()
+    .substring(
+      0,
+      $("#js-" + uniqueID + "-scripture")[0].innerText.trim().length - 2
+    );
+  let verse = $("#js-" + uniqueID + "-verse")[0].innerText.trim();
 
   username.val(scripture);
   message.val(verse);
@@ -67,12 +60,12 @@ function sendToDisplay(uniqueID) {
   }
 }
 
-function deleteVerseFromJSON(id, role){
+function deleteVerseFromJSON(id, role) {
   $.ajax({
-    url: '/sendMessage/'+role+'/'+id+'',
-    type: 'GET',
+    url: "/sendMessage/" + role + "/" + id + "",
+    type: "GET",
     success: function() {
       location.reload();
     }
-});
+  });
 }

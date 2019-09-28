@@ -139,6 +139,12 @@ function WriteJSONFile(obj:any, storage: boolean){
   if (jsString.search("/[null]") === -1){
     jsString = jsString.replace("[null]", "[]");
   }
+  if (jsString.search("/null,") === -1){
+    jsString = jsString.replace("null,", "");
+  }
+  if (jsString.search("/,null,") === -1){
+    jsString = jsString.replace(",null,", ",");
+  }
   fs.writeFileSync(readFrom, jsString, "utf8");
 }
 
