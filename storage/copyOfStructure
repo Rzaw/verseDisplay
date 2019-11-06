@@ -1,0 +1,26 @@
+{
+    "host":[
+        {
+            "id":"0",
+            "scripture":"Jēkaba vēstule 1:7",
+            "verse":"Jo tāds cilvēks, vīrs ar dalītu dvēseli, nepastāvīgs visos savos ceļos"
+        },
+        {
+            "id":"1",
+            "scripture":"Vēstule Ebrejiem 1:7-8",
+            "verse":"Par eņģeļiem Viņš saka: kas Savus eņģeļus dara par vējiem un Savus sulaiņus par uguns liesmām, - bet par Dēlu: Tavs tronis, Dievs, paliek mūžu mūžos, un taisnības zizlis ir Viņa valdnieka varas zizlis. "
+        },
+        {
+            "id":"",
+            "scripture":"ASD",
+            "verse":"123"
+        }
+    ],
+    "guest":[
+        {
+            "id":"0",
+            "scripture":"1.Jāņa vēstule 1:5",
+            "verse":"Šī ir tā vēsts, ko esam no Viņa dzirdējuši un pasludinām jums, ka Dievs ir gaisma un Viņā nav it nekādas tumsības. "
+        }
+    ]
+}

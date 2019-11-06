@@ -51,7 +51,6 @@
       </div>
       <div class="row">
         <div class="col-sm" id="host">
-          <h3 class="text-center mb-1">Vadītājam</h3>
           <% data.host.forEach(function(verses, index){ %>
           <div class="card mb-3">
             <div class="card-body">
@@ -69,10 +68,40 @@
               <a href="" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="card-title" id="js-scripture-11ssdde4">
+                Romiešiem 13:1-5
+                <button type="button" class="close" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
+                <div class="list-group" id="js-verse-11ssdde4">
+                  <button type="button" class="list-group-item list-group-item-action verse-button">
+                    1 Ikviens lai ir paklausīgs varām, kas valda. Jo nav valsts varas, kā vien no Dieva, un tās, kas ir, ir Dieva ieceltas.
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action verse-button">
+                    2 Tātad tas, kas pretojas valsts varai, saceļas pret Dieva iestādījumu. Bet tie, kas saceļas pret to, paši sev sagādā sodu.
+                    </button>
+                  <button type="button" class="list-group-item list-group-item-action verse-button">
+                    3 Jo valdītāji nav bīstami labam darbam, bet ļaunam. Tu negribi bīties valsts varas, labi, dari to, kas labs, tad tu saņemsi viņas uzslavu,
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action verse-button">
+                    4 jo tā ir Dieva kalpone tevis labā. Bet, ja tu dari ļaunu, tad bīsties; ne velti tā nes zobenu, jo tā ir Dieva kalpone, atriebēja un soda nesēja tam, kas dara ļaunu.
+                  </button>
+                  <button type="button" class="list-group-item list-group-item-action verse-button">
+                    5 Tādēļ nepieciešami tai paklausīt ne vien soda dēļ, bet arī sirdsapziņas dēļ.
+                  </button>
+                </div>
+              </p>
+              <button class="btn btn-secondary" onclick="SendToDisplayAll('11ssdde4')">Rādīt visu</button> 
+              <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('11ssdde4')" disabled>Rādīt iezīmētos</button>
+            </div>
+          </div>
           <% })%>
         </div>
         <div class="col-sm" id="guest">
-          <h3 class="text-center mb-1">Viesim</h3>
           <% data.guest.forEach(function(verses, index){ %>
           <div class="card mb-3">
             <div class="card-body">
@@ -87,48 +116,39 @@
               <p class="card-text" id="js-<%= verses.id %>-verse">
                 <%= verses.verse %>
               </p>
-              <a
-                href=""
-                onclick="sendToDisplay('<%= verses.id %>')"
-                class="card-link"
-                >Rādīt</a
-              >
+              <a href="" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
           <% })%>
           <div class="card mb-3">
               <div class="card-body">
-                <h5 class="card-title" id="js-scripture">
+                <div class="card-title" id="js-scripture-11ssdde3">
                   2.Korintiešiem 1:1-5
                   <button type="button" class="close" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
-                </h5>
+                </div>
                 <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
-                <p class="card-text" id="js-verse">
-                    <div class="list-group">
-                        <button type="button" class="list-group-item list-group-item-action">
-                            1 Pāvils, pēc Dieva prāta Kristus Jēzus apustulis, un brālis Timotejs Dieva draudzei, kas ir Korintā, un visiem svētajiem pa visu Ahaju:
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action">
-                            2 žēlastība jums un miers no Dieva, mūsu Tēva, un no Kunga Jēzus Kristus. 
-                          </button>
-                        <button type="button" class="list-group-item list-group-item-action">
-                            3 Slavēts lai ir mūsu Kunga Jēzus Kristus Dievs un Tēvs, žēlastības Tēvs un iepriecināšanas Dievs, kas mūs iepriecina visās mūsu bēdās, 
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action">
-                            4 ka mēs tos, kam ir kādas bēdas, varam iepriecināt ar to iepriecu, ko paši no Dieva esam saņēmuši. 
-                        </button>
-                        <button type="button" class="list-group-item list-group-item-action" disabled>
-                          5 Jo, kā Kristus ciešanas spēcīgi nāk pār mums, tāpat spēcīgi darbojas mūsu ieprieca caur Kristu. 
-                        </button>
-                      </div>
+                  <div class="list-group" id="js-verse-11ssdde3">
+                    <button type="button" class="list-group-item list-group-item-action verse-button">
+                        1 Pāvils, pēc Dieva prāta Kristus Jēzus apustulis, un brālis Timotejs Dieva draudzei, kas ir Korintā, un visiem svētajiem pa visu Ahaju:
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action verse-button">
+                        2 žēlastība jums un miers no Dieva, mūsu Tēva, un no Kunga Jēzus Kristus. 
+                      </button>
+                    <button type="button" class="list-group-item list-group-item-action verse-button">
+                        3 Slavēts lai ir mūsu Kunga Jēzus Kristus Dievs un Tēvs, žēlastības Tēvs un iepriecināšanas Dievs, kas mūs iepriecina visās mūsu bēdās, 
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action verse-button">
+                        4 ka mēs tos, kam ir kādas bēdas, varam iepriecināt ar to iepriecu, ko paši no Dieva esam saņēmuši. 
+                    </button>
+                    <button type="button" class="list-group-item list-group-item-action verse-button">
+                        5 Jo, kā Kristus ciešanas spēcīgi nāk pār mums, tāpat spēcīgi darbojas mūsu ieprieca caur Kristu. 
+                    </button>
+                  </div>
                 </p>
-                <a
-                  href="#"
-                  class="card-link"
-                  >Rādīt visu</a
-                >
+                <button class="btn btn-secondary" onclick="SendToDisplayAll('11ssdde3')">Rādīt visu</button> 
+                <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('11ssdde3')" disabled>Rādīt iezīmētos</button>
               </div>
             </div>
         </div>
@@ -136,14 +156,7 @@
     </div>
 
     <!-- Modal -->
-    <div
-      class="modal fade"
-      id="addVerseModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="addVerseModalLabel"
-      aria-hidden="true"
-    >
+    <div class="modal fade" id="addVerseModal" tabindex="-1" role="dialog" aria-labelledby="addVerseModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -158,16 +171,9 @@
             <form method="post" action="/sendMessage" id="addVerse">
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                  <label class="input-group-text" for="inputGroupSelect01"
-                    >Kam?</label
-                  >
+                  <label class="input-group-text" for="inputGroupSelect01">Kam?</label>
                 </div>
-                <select
-                required
-                  class="custom-select"
-                  name="inputGroupSelect01"
-                  id="inputGroupSelect01"
-                >
+                <select required class="custom-select" name="inputGroupSelect01" id="inputGroupSelect01">
                 <optgroup label="Izvēlēties kam pievienot rakstu vietu">
                   <option value="host">Vadītājam</option>
                   <option value="guest">Viesim</option>
@@ -177,45 +183,23 @@
 
               <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                  <span class="input-group-text" id="basic-addon3"
-                    >Rakstu vieta</span
-                  >
+                  <span class="input-group-text" id="basic-addon3">Rakstu vieta</span>
                 </div>
-                <input
-                  type="text"
-                  class="form-control"
-                  name="scripture"
-                  id="scripture"
-                  aria-describedby="basic-addon3"
-                />
+                <input type="text" class="form-control" name="scripture" id="scripture" aria-describedby="basic-addon3"/>
               </div>
 
               <div class="input-group">
                 <div class="input-group-prepend">
                   <span class="input-group-text">Pants</span>
                 </div>
-                <textarea
-                  class="form-control"
-                  name="verse"
-                  aria-label="Pants"
+                <textarea class="form-control" name="verse" aria-label="Pants"
                 ></textarea>
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Aizvērt
-            </button>
-            <input
-              type="submit"
-              form="addVerse"
-              class="btn btn-primary"
-              value="Pievienot sarakstam"
-            />
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Aizvērt</button>
+            <input type="submit" form="addVerse" class="btn btn-primary" value="Pievienot sarakstam"/>
           </div>
         </div>
       </div>

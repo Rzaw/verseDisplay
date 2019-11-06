@@ -35,6 +35,18 @@ $(function() {
   });
 });
 
+// Priekš pogām
+$(".verse-button").click(function() {
+  $(this).toggleClass("active");
+  // Ja kādam no pantiem ir 'active' klase, tad tiek noņemts atribūts 'disabled',
+  // bet ja nav atrasts tad atribūts tiek uzlikts atpakaļ.
+  if ($(this).parent().children().hasClass("active")) {
+    $(this).parent().parent().children()[5].removeAttribute('disabled');
+  } else {
+    $(this).parent().parent().children()[5].setAttribute('disabled', 'disabled');
+  }
+});
+
 function sendToDisplay(uniqueID) {
   var username = $("#username");
   var message = $("#message");
@@ -68,4 +80,48 @@ function deleteVerseFromJSON(id, role) {
       location.reload();
     }
   });
+}
+
+function SendToDisplaySelected(uniqueID) {
+  var username = $("#username");
+  var message = $("#message");
+  var send_message = $("#send_message");
+  var send_username = $("#send_username");
+
+  // Ievāc informāciju no bloka un atlasa atzīmētos.
+  let scripture = $("#js-scripture-"+uniqueID)[0].innerText.trim().substring(0,$("#js-scripture-"+uniqueID)[0].innerText.trim().length -2);
+
+    let verse = $('#js-verse-'+uniqueID).children().filter(".active").text();
+
+  username.val(scripture);
+  message.val(verse);
+
+  if (username != null || username != undefined) {
+    send_username.click();
+  }
+  if (message != null || message != undefined) {
+    send_message.click();
+  }
+}
+
+function SendToDisplayAll(uniqueID) {
+  var username = $("#username");
+  var message = $("#message");
+  var send_message = $("#send_message");
+  var send_username = $("#send_username");
+
+  // Ievāc informāciju no bloka un atlasa atzīmētos.
+  let scripture = $("#js-scripture-"+uniqueID)[0].innerText.trim().substring(0,$("#js-scripture-"+uniqueID)[0].innerText.trim().length -2);
+  let verse = $('#js-verse-'+uniqueID).children().text();
+
+
+  username.val(scripture);
+  message.val(verse);
+
+  if (username != null || username != undefined) {
+    send_username.click();
+  }
+  if (message != null || message != undefined) {
+    send_message.click();
+  }
 }
