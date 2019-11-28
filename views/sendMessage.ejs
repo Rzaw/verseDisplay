@@ -68,6 +68,8 @@
               <a href="" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
+          
+          <% })%>
           <div class="card mb-3">
             <div class="card-body">
               <div class="card-title" id="js-scripture-11ssdde4">
@@ -99,7 +101,6 @@
               <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('11ssdde4')" disabled>Rādīt iezīmētos</button>
             </div>
           </div>
-          <% })%>
         </div>
         <div class="col-sm" id="guest">
           <% data.guest.forEach(function(verses, index){ %>

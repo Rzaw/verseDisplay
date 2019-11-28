@@ -24,8 +24,9 @@ app.get("/sendMessage", (req, res, next) => {
   
   try {
     let jsonString = FetchJSONFile(true);
-    let verses = JSON.parse(jsonString);
-    res.render("sendMessage", { data: verses });
+    let jsonData = JSON.parse(jsonString);
+    // let versesArray = verses.verse.split(/([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])/g);
+    res.render("sendMessage", { data: jsonData });
   } catch (error) {
     next(error);
   }
