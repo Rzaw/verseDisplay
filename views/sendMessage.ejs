@@ -41,8 +41,6 @@
               </button>
               <button type="button" class="btn btn-dark" style="margin-top: 1em;">Tīrīt displeju</button>
             </div>
-
-          
         </div>
       </div>
       </header>
@@ -51,8 +49,32 @@
       </div>
       <div class="row">
         <div class="col-sm" id="host">
-          <% data.host.forEach(function(verses, index){ %>
-          <div class="card mb-3">
+          <% data.host.forEach(function(verses, index){
+            if (/\d/.test(verses.verse)) { %>
+            <div class="card mb-3">
+            <div class="card-body">
+              <div class="card-title" id="js-scripture-<%= verses.id %>">
+                <%= verses.scripture %>
+                <button type="button" class="close" aria-label="Close" onclick="deleteVerseFromJSON('<%= index %>', 'host')">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <h6 class="card-subtitle mb-2 text-muted">Vadītājs</h6>
+                <div class="list-group" id="js-verse-<%= verses.id %>">
+                    <% verses.verse.match(/\d+\s+[A-ž\s\x2C\x2E\x3A\x22\x2D]+/g).forEach( function (res, count) {%>
+                      <button type="button" class="list-group-item list-group-item-action verse-button">
+                        <%= res %>
+                      </button>
+                    <% })%>
+                </div>
+              </p>
+              <button class="btn btn-secondary" onclick="SendToDisplayAll('<%= verses.id %>')">Rādīt visu</button> 
+              <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('<%= verses.id %>')" disabled>Rādīt iezīmētos</button>
+            </div>
+          </div>
+          <% }
+          else { %>
+            <div class="card mb-3">
             <div class="card-body">
               <h5 class="card-title" id="js-<%= verses.id %>-scripture">
                 <%= verses.scripture %>
@@ -68,43 +90,37 @@
               <a href="" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
+          <% }
+          })%>
           
-          <% })%>
-          <div class="card mb-3">
+        </div>
+        <div class="col-sm" id="guest">
+          <% data.guest.forEach(function(verses, index){
+            if (/\d/.test(verses.verse)) { %>
+            <div class="card mb-3">
             <div class="card-body">
-              <div class="card-title" id="js-scripture-11ssdde4">
-                Romiešiem 13:1-5
-                <button type="button" class="close" aria-label="Close">
+              <div class="card-title" id="js-scripture-<%= verses.id %>">
+                <%= verses.scripture %>
+                <button type="button" class="close" aria-label="Close" onclick="deleteVerseFromJSON('<%= index %>', 'host')">
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
               <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
-                <div class="list-group" id="js-verse-11ssdde4">
-                  <button type="button" class="list-group-item list-group-item-action verse-button">
-                    1 Ikviens lai ir paklausīgs varām, kas valda. Jo nav valsts varas, kā vien no Dieva, un tās, kas ir, ir Dieva ieceltas.
-                  </button>
-                  <button type="button" class="list-group-item list-group-item-action verse-button">
-                    2 Tātad tas, kas pretojas valsts varai, saceļas pret Dieva iestādījumu. Bet tie, kas saceļas pret to, paši sev sagādā sodu.
-                    </button>
-                  <button type="button" class="list-group-item list-group-item-action verse-button">
-                    3 Jo valdītāji nav bīstami labam darbam, bet ļaunam. Tu negribi bīties valsts varas, labi, dari to, kas labs, tad tu saņemsi viņas uzslavu,
-                  </button>
-                  <button type="button" class="list-group-item list-group-item-action verse-button">
-                    4 jo tā ir Dieva kalpone tevis labā. Bet, ja tu dari ļaunu, tad bīsties; ne velti tā nes zobenu, jo tā ir Dieva kalpone, atriebēja un soda nesēja tam, kas dara ļaunu.
-                  </button>
-                  <button type="button" class="list-group-item list-group-item-action verse-button">
-                    5 Tādēļ nepieciešami tai paklausīt ne vien soda dēļ, bet arī sirdsapziņas dēļ.
-                  </button>
+                <div class="list-group" id="js-verse-<%= verses.id %>">
+                    <% verses.verse.match(/\d+\s+[A-ž\s\x2C\x2E\x3A\x22\x2D\x21\x3F]+/g).forEach( function (res, count) {%>
+                      <button type="button" class="list-group-item list-group-item-action verse-button">
+                        <%= res %>
+                      </button>
+                    <% })%>
                 </div>
               </p>
-              <button class="btn btn-secondary" onclick="SendToDisplayAll('11ssdde4')">Rādīt visu</button> 
-              <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('11ssdde4')" disabled>Rādīt iezīmētos</button>
+              <button class="btn btn-secondary" onclick="SendToDisplayAll('<%= verses.id %>')">Rādīt visu</button> 
+              <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('<%= verses.id %>')" disabled>Rādīt iezīmētos</button>
             </div>
           </div>
-        </div>
-        <div class="col-sm" id="guest">
-          <% data.guest.forEach(function(verses, index){ %>
-          <div class="card mb-3">
+          <% }
+          else { %>
+            <div class="card mb-3">
             <div class="card-body">
               <h5 class="card-title" id="js-<%= verses.id %>-scripture">
                 <%= verses.scripture %>
@@ -120,38 +136,8 @@
               <a href="" onclick="sendToDisplay('<%= verses.id %>')" class="card-link">Rādīt</a>
             </div>
           </div>
-          <% })%>
-          <div class="card mb-3">
-              <div class="card-body">
-                <div class="card-title" id="js-scripture-11ssdde3">
-                  2.Korintiešiem 1:1-5
-                  <button type="button" class="close" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
-                  <div class="list-group" id="js-verse-11ssdde3">
-                    <button type="button" class="list-group-item list-group-item-action verse-button">
-                        1 Pāvils, pēc Dieva prāta Kristus Jēzus apustulis, un brālis Timotejs Dieva draudzei, kas ir Korintā, un visiem svētajiem pa visu Ahaju:
-                    </button>
-                    <button type="button" class="list-group-item list-group-item-action verse-button">
-                        2 žēlastība jums un miers no Dieva, mūsu Tēva, un no Kunga Jēzus Kristus. 
-                      </button>
-                    <button type="button" class="list-group-item list-group-item-action verse-button">
-                        3 Slavēts lai ir mūsu Kunga Jēzus Kristus Dievs un Tēvs, žēlastības Tēvs un iepriecināšanas Dievs, kas mūs iepriecina visās mūsu bēdās, 
-                    </button>
-                    <button type="button" class="list-group-item list-group-item-action verse-button">
-                        4 ka mēs tos, kam ir kādas bēdas, varam iepriecināt ar to iepriecu, ko paši no Dieva esam saņēmuši. 
-                    </button>
-                    <button type="button" class="list-group-item list-group-item-action verse-button">
-                        5 Jo, kā Kristus ciešanas spēcīgi nāk pār mums, tāpat spēcīgi darbojas mūsu ieprieca caur Kristu. 
-                    </button>
-                  </div>
-                </p>
-                <button class="btn btn-secondary" onclick="SendToDisplayAll('11ssdde3')">Rādīt visu</button> 
-                <button class="btn btn-primary sendSelected" onclick="SendToDisplaySelected('11ssdde3')" disabled>Rādīt iezīmētos</button>
-              </div>
-            </div>
+          <% }
+          })%>
         </div>
       </div>
     </div>
