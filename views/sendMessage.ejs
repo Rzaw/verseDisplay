@@ -107,7 +107,7 @@
               </div>
               <h6 class="card-subtitle mb-2 text-muted">Viesis</h6>
                 <div class="list-group" id="js-verse-<%= verses.id %>">
-                    <% verses.verse.match(/\d+\s+[A-ž\s\x2C\x2E\x3A\x22\x2D\x21\x3F]+/g).forEach( function (res, count) {%>
+                    <% verses.verse.match(/\d+\s+[A-ž\s\x3A\x3B\x22\x2D\x2C\x2E\x21\x3F]+/g).forEach( function (res, count) {%>
                       <button type="button" class="list-group-item list-group-item-action verse-button">
                         <%= res %>
                       </button>
