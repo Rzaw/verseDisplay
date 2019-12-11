@@ -4,7 +4,7 @@ import bodyParser = require("body-parser");
 import idGen = require("uniqid");
 const app = express();
 const verseStorage: string = "./storage/verses.json";
-const currentVerse: string = "./storage/currentVerse.json"
+const currentVerse: string = "./storage/currentVerse.json";
 
 //set the template engine ejs
 app.set("view engine", "ejs");
@@ -17,15 +17,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 //routes
 app.get("/", (req, res) => {
   var obj = GetCurrentVerse();
-  res.render("index", {obj: obj});
+  res.render("index", { obj: obj });
 });
 
 app.get("/sendMessage", (req, res, next) => {
-  
   try {
     let jsonString = FetchJSONFile(true);
     let jsonData = JSON.parse(jsonString);
-    // let versesArray = verses.verse.split(/([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])/g);
+
     res.render("sendMessage", { data: jsonData });
   } catch (error) {
     next(error);
@@ -33,7 +32,8 @@ app.get("/sendMessage", (req, res, next) => {
 });
 
 app.post("/sendMessage", (req, res, next) => {
-  var jsonString: any = FetchJSONFile(true);
+  // Šeit jāsavieno kopā grāmata ar nodaļu
+  var jsonString: string = FetchJSONFile(true);
   var verses: any = JSON.parse(jsonString);
   verses = PushToJSONObject(
     req.body.inputGroupSelect01,
@@ -50,25 +50,23 @@ app.post("/sendMessage", (req, res, next) => {
   res.redirect("/sendMessage");
 });
 
-app.param(['role', 'id'], function (req, res, next, value) {
-  next()
-
-})
-
+app.param(["role", "id"], function(req, res, next, value) {
+  next();
+});
 
 app.get("/sendMessage/:role/:id", (req, res, next) => {
   var jsonString: any = FetchJSONFile(true);
   var verses = JSON.parse(jsonString);
-  
-  var params = req.path.split('/');
-  params = arrayRemove(params, "sendMessage")
+
+  var params = req.path.split("/");
+  params = arrayRemove(params, "sendMessage");
   params = arrayRemove(params, "");
 
   switch (params[0]) {
-    case 'host':
+    case "host":
       delete verses.host[params[1]];
       break;
-    case 'guest':
+    case "guest":
       delete verses.guest[params[1]];
       break;
   }
@@ -103,7 +101,7 @@ io.on("connection", (socket: any) => {
       message: data.message,
       username: socket.username
     });
-    WriteJSONFile({scripture: socket.username, verse: data.message}, false);
+    WriteJSONFile({ scripture: socket.username, verse: data.message }, false);
     console.log("Message sent");
   });
 
@@ -117,7 +115,7 @@ io.on("connection", (socket: any) => {
 
 function FetchJSONFile(storage: boolean) {
   var readFrom: string;
-  if (storage){
+  if (storage) {
     readFrom = verseStorage;
   } else {
     readFrom = currentVerse;
@@ -126,24 +124,24 @@ function FetchJSONFile(storage: boolean) {
   return jsonString;
 }
 
-function WriteJSONFile(obj:any, storage: boolean){
+function WriteJSONFile(obj: any, storage: boolean) {
   var readFrom: string;
-  if (storage){
+  if (storage) {
     readFrom = verseStorage;
   } else {
     readFrom = currentVerse;
   }
-  var jsString:string = JSON.stringify(obj)
+  var jsString: string = JSON.stringify(obj);
   if (jsString.search("/,null") === -1) {
     jsString = jsString.replace(",null", "");
   }
-  if (jsString.search("/[null]") === -1){
+  if (jsString.search("/[null]") === -1) {
     jsString = jsString.replace("[null]", "[]");
   }
-  if (jsString.search("/null,") === -1){
+  if (jsString.search("/null,") === -1) {
     jsString = jsString.replace("null,", "");
   }
-  if (jsString.search("/,null,") === -1){
+  if (jsString.search("/,null,") === -1) {
     jsString = jsString.replace(",null,", ",");
   }
   fs.writeFileSync(readFrom, jsString, "utf8");
@@ -155,7 +153,6 @@ function PushToJSONObject(
   scripture: string,
   verse: string
 ): void {
-
   switch (role) {
     case "host":
       jsonFile.host.push({
@@ -179,16 +176,13 @@ function PushToJSONObject(
   return jsonFile;
 }
 
-function arrayRemove(arr:string[], value:string) {
-  return arr.filter(function(ele){
-      return ele != value;
+function arrayRemove(arr: string[], value: string) {
+  return arr.filter(function(ele) {
+    return ele != value;
   });
 }
 
-function GetCurrentVerse(){
+function GetCurrentVerse() {
   var json = FetchJSONFile(false);
   return JSON.parse(json);
-}
-
-function WriteToCurrentVerse(){
 }

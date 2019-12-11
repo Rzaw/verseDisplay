@@ -22,7 +22,6 @@ app.get("/sendMessage", (req, res, next) => {
     try {
         let jsonString = FetchJSONFile(true);
         let jsonData = JSON.parse(jsonString);
-        // let versesArray = verses.verse.split(/([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])/g);
         res.render("sendMessage", { data: jsonData });
     }
     catch (error) {
@@ -30,6 +29,7 @@ app.get("/sendMessage", (req, res, next) => {
     }
 });
 app.post("/sendMessage", (req, res, next) => {
+    // Šeit jāsavieno kopā grāmata ar nodaļu
     var jsonString = FetchJSONFile(true);
     var verses = JSON.parse(jsonString);
     verses = PushToJSONObject(req.body.inputGroupSelect01, verses, req.body.scripture, req.body.verse);
@@ -41,20 +41,20 @@ app.post("/sendMessage", (req, res, next) => {
     }
     res.redirect("/sendMessage");
 });
-app.param(['role', 'id'], function (req, res, next, value) {
+app.param(["role", "id"], function (req, res, next, value) {
     next();
 });
 app.get("/sendMessage/:role/:id", (req, res, next) => {
     var jsonString = FetchJSONFile(true);
     var verses = JSON.parse(jsonString);
-    var params = req.path.split('/');
+    var params = req.path.split("/");
     params = arrayRemove(params, "sendMessage");
     params = arrayRemove(params, "");
     switch (params[0]) {
-        case 'host':
+        case "host":
             delete verses.host[params[1]];
             break;
-        case 'guest':
+        case "guest":
             delete verses.guest[params[1]];
             break;
     }
@@ -153,7 +153,5 @@ function arrayRemove(arr, value) {
 function GetCurrentVerse() {
     var json = FetchJSONFile(false);
     return JSON.parse(json);
-}
-function WriteToCurrentVerse() {
 }
 //# sourceMappingURL=index.js.map
