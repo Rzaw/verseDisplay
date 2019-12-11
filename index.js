@@ -22,7 +22,7 @@ app.get("/sendMessage", (req, res, next) => {
     try {
         let jsonString = FetchJSONFile(true);
         let jsonData = JSON.parse(jsonString);
-        res.render("sendMessage", { data: jsonData });
+        res.render("sendMessage", { data: jsonData, test: "Hey!" });
     }
     catch (error) {
         next(error);
@@ -153,5 +153,16 @@ function arrayRemove(arr, value) {
 function GetCurrentVerse() {
     var json = FetchJSONFile(false);
     return JSON.parse(json);
+}
+function GetAllBibleBooks() {
+    var books = {
+        OldTest: [""],
+        NewTestm: [""]
+    };
+    var oldTestm = [];
+    var newTestem = [];
+    books.OldTest = oldTestm;
+    books.NewTestm = newTestem;
+    return books;
 }
 //# sourceMappingURL=index.js.map

@@ -117,6 +117,9 @@ function SendToDisplaySelected(uniqueID) {
 
   activeVerses.removeClass("active");
 
+  // Jāpaņem cipari no pantiem un jāsavieno kopā ar scripture un jāsūta uz displeju.
+  // Loģika kur kā tiek likti panti.
+
   username.val(scripture);
   message.val(verse);
 
