@@ -40,10 +40,23 @@ $(".verse-button").click(function() {
   $(this).toggleClass("active");
   // Ja kādam no pantiem ir 'active' klase, tad tiek noņemts atribūts 'disabled',
   // bet ja nav atrasts tad atribūts tiek uzlikts atpakaļ.
-  if ($(this).parent().children().hasClass("active")) {
-    $(this).parent().parent().children()[5].removeAttribute('disabled');
+  if (
+    $(this)
+      .parent()
+      .children()
+      .hasClass("active")
+  ) {
+    $(this)
+      .parent()
+      .parent()
+      .children()[5]
+      .removeAttribute("disabled");
   } else {
-    $(this).parent().parent().children()[5].setAttribute('disabled', 'disabled');
+    $(this)
+      .parent()
+      .parent()
+      .children()[5]
+      .setAttribute("disabled", "disabled");
   }
 });
 
@@ -89,9 +102,20 @@ function SendToDisplaySelected(uniqueID) {
   var send_username = $("#send_username");
 
   // Ievāc informāciju no bloka un atlasa atzīmētos.
-  let scripture = $("#js-scripture-"+uniqueID)[0].innerText.trim().substring(0,$("#js-scripture-"+uniqueID)[0].innerText.trim().length -2);
+  let scripture = $("#js-scripture-" + uniqueID)[0]
+    .innerText.trim()
+    .substring(
+      0,
+      $("#js-scripture-" + uniqueID)[0].innerText.trim().length - 2
+    );
+  // Pānem visus aktīvos pantus.
+  let activeVerses = $("#js-verse-" + uniqueID)
+    .children()
+    .filter(".active");
 
-    let verse = $('#js-verse-'+uniqueID).children().filter(".active").text();
+  let verse = activeVerses.text();
+
+  activeVerses.removeClass("active");
 
   username.val(scripture);
   message.val(verse);
@@ -111,9 +135,15 @@ function SendToDisplayAll(uniqueID) {
   var send_username = $("#send_username");
 
   // Ievāc informāciju no bloka un atlasa atzīmētos.
-  let scripture = $("#js-scripture-"+uniqueID)[0].innerText.trim().substring(0,$("#js-scripture-"+uniqueID)[0].innerText.trim().length -2);
-  let verse = $('#js-verse-'+uniqueID).children().text();
-
+  let scripture = $("#js-scripture-" + uniqueID)[0]
+    .innerText.trim()
+    .substring(
+      0,
+      $("#js-scripture-" + uniqueID)[0].innerText.trim().length - 2
+    );
+  let verse = $("#js-verse-" + uniqueID)
+    .children()
+    .text();
 
   username.val(scripture);
   message.val(verse);
